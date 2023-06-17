@@ -8,29 +8,18 @@ from db_manager.serializers import PatientSerializer
 
 # Create your views here.
 @csrf_exempt
-def patientApi(request,id=0):
+def patientApi(request,id = 0):
     if request.method == 'GET':
         patients = Patients.objects.all()
         patient_serializer = PatientSerializer(patients,many=True)
         return JsonResponse(patient_serializer.data,safe=False)
     elif request.method == 'POST':
-        try:
-            patient_data = JSONParser().parse(request)
-            patient_serializer = PatientSerializer(data=patient_data)
-            if patient_serializer.is_valid():
-                patient_serializer.save()
-                return JsonResponse('Added Succesfully',safe=False)
-            return JsonResponse('Failed to Add',safe=False)
-        except Exception as e:
-            print("Exception occurred in POST method:", str(e))
-            return JsonResponse('Error occurred during POST', safe=False)
-    # elif request.method == 'POST':
-    #     department_data = JSONParser().parse(request)
-    #     departments_serializer = DepartmentSerializer(data=department_data)
-    #     if departments_serializer.is_valid():
-    #         departments_serializer.save()
-    #         return JsonResponse('Added Successfully',safe=False)
-    #     return JsonResponse('Failed to Add',safe=False)
+        patient_data = JSONParser().parse(request)
+        patient_serializer = PatientSerializer(data=patient_data) 
+        if patient_serializer.is_valid():
+            patient_serializer.save()
+            return JsonResponse('Added Successfully',safe=False)
+        return JsonResponse('Failed to Add',safe=False)
     elif request.method == 'PUT':
         patient_data = JSONParser().parse(request)
         patient = Patients.objects.get(OpNumber = patient_data['OpNumber'])
