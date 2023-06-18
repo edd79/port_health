@@ -1,10 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
+from django.contrib.auth import authenticate,login,logout
+from django.contrib import messages
 
 from db_manager.models import Patients
 from db_manager.serializers import PatientSerializer
+from db_manager.forms import SignUpForm
 
 # Create your views here.
 @csrf_exempt
@@ -32,3 +35,43 @@ def patientApi(request,id = 0):
         patient = Patients.objects.get(OpNumber = id)
         patient.delete()
         return JsonResponse('Deleted Successfully',safe=False)
+
+
+def home(request):
+    #check user login request
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        #do the auth
+        user = authenticate(request, username = username,password = password)
+        if user is not None:
+            login(request,user)
+            messages.success(request, 'Successful Login')
+            return redirect('home')
+        else:
+            messages.success(request,'Login Failed')
+            return redirect('home')
+    else:
+        return render(request, 'home.html', {})
+
+def user_logout(request):
+    logout(request)
+    messages.success(request, 'You have logged out')
+    return redirect('home')
+
+def new_user(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username,password=password)
+            login(request,user)
+            messages.success(request,'Successful Registration')
+            return redirect('home')
+    else:
+        form = SignUpForm
+        return render(request, 'register.html', {'form':form})
+    
+    return render(request, 'register.html', {'form': form})
