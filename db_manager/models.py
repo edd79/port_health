@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 # Create your models here.
 class Patients(models.Model):
@@ -12,4 +13,4 @@ class Patients(models.Model):
     Age = models.IntegerField()
     Sex = models.TextField(max_length=255)
     Address = models.TextField(max_length=500)
-    # AdmissionDate = models.DateField()
+    AdmissionDate = models.DateField(default=date.today)
