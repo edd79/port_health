@@ -1,16 +1,24 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+#from django.views.decorators.csrf import csrf_protect
+#from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
+#from django.middleware.csrf import get_token
+#from django.middleware import csrf
 
 from db_manager.models import Patients
 from db_manager.serializers import PatientSerializer
 from db_manager.forms import SignUpForm
+#from db_manager.cookys import 
+
 
 # Create your views here.
 @csrf_exempt
+#@csrf_protect
+#@ensure_csrf_cookie
 def patientApi(request,id = 0):
     if request.method == 'GET':
         patients = Patients.objects.all()
