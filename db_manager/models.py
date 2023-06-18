@@ -13,4 +13,4 @@ class Patients(models.Model):
     Age = models.IntegerField()
     Sex = models.TextField(max_length=255)
     Address = models.TextField(max_length=500)
-    AdmissionDate = models.DateField(default=date.today)
+    AdmissionDate = models.DateField(auto_now_add= True)
