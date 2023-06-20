@@ -13,3 +13,8 @@ class Patients(models.Model):
     Sex = models.TextField(max_length=255)
     Address = models.TextField(max_length=500)
     AdmissionDate = models.DateField(auto_now_add= True)
+
+
+class Users(models.Model):
+    username = models.CharField(max_length=255)
+    password = models.TextField(max_length=255)
